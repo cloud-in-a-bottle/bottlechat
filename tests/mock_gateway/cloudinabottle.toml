@@ -1,0 +1,23 @@
+[app]
+name = "mock-gateway"
+version = "0.1.0"
+description = "Test double for an openai-compat provider (stands in for the Bifrost gateway)."
+
+[runtime.container]
+image = "Dockerfile"
+port = 8080
+
+[routing]
+health_check = "/health"
+
+[resources]
+memory_mb = 128
+cpu_cores = 0.25
+
+[data]
+app_data = false
+
+[[services.v2.provides]]
+service = "github.com/imbue-openhost/openhost-bifrost-llm-gateway/services/openai-compat"
+version = "0.1.0"
+endpoint = "/service/"
