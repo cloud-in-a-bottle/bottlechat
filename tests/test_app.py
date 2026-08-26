@@ -282,8 +282,13 @@ def test_the_spa_shell_and_pwa_assets_are_served(stack: OpenhostStack) -> None:
     assert manifest.status_code == 200
     assert manifest.json()["display"] == "standalone"
 
-    assert stack.owner_session.get(f"{stack.url}/sw.js").status_code == 200
     assert stack.owner_session.get(f"{stack.url}/icons/icon-192.png").status_code == 200
+
+    # Service-worker registration fails outright on a redirect, so /sw.js must not be login-gated.
+    anonymous = requests.Session()
+    worker = anonymous.get(f"{stack.url}/sw.js", allow_redirects=False, timeout=10)
+    assert worker.status_code == 200, worker.status_code
+    assert "bottlechat-shell" in worker.text
 
 
 @pytest.mark.parametrize("payload", [{"content": ""}, {"content": "   "}])

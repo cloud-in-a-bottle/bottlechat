@@ -12,9 +12,12 @@ port = 8080
 health_check = "/health"
 # Only the share surface is public.  `/share/*` serves the read-only transcript page and its
 # JSON API, keyed by an unguessable token.  The rest are the static files that page pulls in —
-# the built bundle, icons, favicon, manifest.  Code and images only: every route that can reach
-# chat data lives under `/api/*`, which stays owner-gated (and re-checks the owner header).
-public_paths = ["/share", "/assets", "/icons", "/favicon.svg", "/manifest.webmanifest"]
+# the built bundle, icons, favicon, manifest, service worker.  Code and images only: every route
+# that can reach chat data lives under `/api/*`, which stays owner-gated (and re-checks the owner
+# header).  `/sw.js` is here because a redirect to /login fails service-worker registration
+# outright, and whether the browser attaches credentials to a worker script fetch isn't something
+# to bet PWA install on.
+public_paths = ["/share", "/assets", "/icons", "/favicon.svg", "/manifest.webmanifest", "/sw.js"]
 
 [resources]
 memory_mb = 512
